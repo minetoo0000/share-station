@@ -1,6 +1,6 @@
 {
-  "short_name": "React App",
-  "name": "Create React App Sample",
+  "short_name": "ShareStation",
+  "name": "Share Station: 파일 및 텍스트 전송 제품",
   "icons": [
     {
       "src": "favicon.ico",

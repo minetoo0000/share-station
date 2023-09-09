@@ -1,0 +1,134 @@
+@use "./../ShareStation.module.scss" as *;
+@use "./../../utiles" as *;
+
+
+// -- 사용 가능한 스태이션 종류.
+.text{}
+.memo{}
+.file{}
+.broadcast{}
+.storage{}
+
+
+
+// --[[ Station ]]
+.Station{
+  // @include debug;
+  width:100%;
+  height:fit-content;
+  cursor:pointer;
+  .station{
+    width:100%;
+    height:fit-content;
+    border-radius:4px;
+    //? 기본 색.
+    background-color:$color-gray;
+    .text+&{
+      background-color:$color-text-station;
+    }
+    .memo+&{
+      background-color:$color-memo-station;
+    }
+    .file+&{
+      background-color:$color-file-station;
+    }
+    .broadcast+&{
+      background-color:$color-broadcast-station;
+    }
+    .storage+&{
+      background-color:$color-storage-station;
+    }
+    @include flex_row;
+    ._left{
+      // @include debug;
+      width:fit-content;
+      height:100%;
+      @include flex_row;
+      .title{
+        padding:6px 0px 6px 14px;
+        //? 기본 색.
+        color:$color-white;
+        .memo+&{
+          color:$color-gray;
+        }
+        font-family:$font;
+        font-size:20px;
+        white-space:nowrap;
+        user-select:none;
+        &::before{
+          //? 기본 스태이션 이름.
+          content:"Uknown Station";
+        }
+        .text+&::before{
+          content:"Text Station";
+        }
+        .memo+&::before{
+          content:"Memo Station";
+        }
+        .file+&::before{
+          content:"File Station";
+        }
+        .broadcast+&::before{
+          content:"Broadcast Net";
+        }
+        .storage+&::before{
+          content:"Storage Net";
+        }
+      }
+    }
+    // -- 모바일은 보일 필요 없음.
+    ._right{
+      display:none;
+    }
+  }
+}
+
+
+:global(.TILT_ROW){
+  .Station{
+    .station{
+      // -- 공통 패딩.
+      padding:20px;
+      ._left{
+        .title{
+          // -- 추가 패딩.
+          padding:10px 0px 10px 10px;
+          font-size:32px;
+        }
+      }
+      // --[ DESKTOP ]
+      ._right{
+        display:flex;
+        width:100%;
+        height:auto;
+        // -- Text Station
+        ._text_box{
+          // @include debug;
+          width:100%;
+          height:fit-content;
+          padding-left:40px;
+          @include flex_column;
+          .text_box{
+            width:100%;
+            height:160px;
+            padding:20px;
+            border:none;
+            outline:none;
+            resize:none;
+            background-color:$color-white+#{4};
+            color:$color-text-black;
+            font-family:$font;
+            font-size:20px;
+            // word-break:break-word;
+            overflow-wrap:anywhere;
+            box-shadow:6px 6px 4px 0px $color-black+#{4};
+            &:empty::before{
+              content:"Enter Text... or Drag and Drop Text then 'Enter'";
+              color:$color-gray;
+            }
+          }
+        }
+      }
+    }
+  }
+}

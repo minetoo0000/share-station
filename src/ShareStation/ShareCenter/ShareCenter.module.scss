@@ -1,0 +1,442 @@
+@use './../../utiles' as *;
+@use './../ShareStation.module.scss' as *;
+
+
+.text,.memo,.file,.broadcast,.storage{
+  width:100%;
+  height:100%;
+}
+
+
+// --[ Share Center ]
+.ShareCenter{
+  // @include debug;
+  width:100%;
+  height:100%;
+  .share_center{
+    width:100%;
+    height:100%;
+    //? 기본 색.
+    background-color:$color-gray;
+    @include flex_column;
+    .text &{
+      background-color:$color-text-station;
+    }
+    .memo &{
+      background-color:$color-memo-station;
+    }
+    .file &{
+      background-color:$color-file-station;
+    }
+    .broadcast &{
+      background-color:$color-broadcast-station;
+    }
+    .storage &{
+      background-color:$color-storage-station;
+    }
+    //? 모바일에선 보이지 않음.
+    ._title{
+      display:none;
+    }
+    ._control{
+      // @include debug;
+      width:100%;
+      height:100%;
+    }
+  }
+}
+// --[ Share Center-desktop ]
+:global(.TILT_ROW){
+  .text,.memo,.file,.broadcast,.storage{}
+  .ShareCenter{
+    .share_center{
+      // --[ DESKTOP ]
+      ._title{
+        // @include debug;
+        display:flex;
+        width:100%;
+        height:fit-content;
+        .title{
+          width:100%;
+          height:fit-content;
+          padding:40px 0px 0px 50px;
+          color:$color-white;
+          font-family:$font;
+          font-size:32px;
+        }
+      }
+      ._control{}
+    }
+  }
+}
+
+
+// --[[ TextCenter ]]
+.Center{
+  width:100%;
+  height:100%;
+  overflow-y:auto;
+  @include flex_column;
+  ._box{
+    // @include debug;
+    width:100%;
+    height:100%;
+    min-height:calc( 15px + 10px + 50px + 35px + 35px );
+    padding:15px 20px 10px 20px;
+    .box{
+      // @include debug(solid, red);
+      width:100%;
+      height:100%;
+      //? 텍스트, 메모일 때 기본 값.
+      min-height:calc( 50px + 35px );
+      max-height:calc( 150px + 35px );
+      .file &{
+        min-height:calc( 50px + 35px + 35px );
+        max-height:calc( 250px + 35px + 35px );
+      }
+      .broadcast &{
+        max-height:unset;
+      }
+      @include flex_column;
+
+
+      ._input{
+        // @include debug(dashed, red);
+        width:100%;
+        height:100%;
+        min-height:50px;
+        max-height:150px;
+        .file &{
+          max-height:250px;
+        }
+        .broadcast &{
+          max-height:unset;
+        }
+        border:none;
+        outline:none;
+        background-color:$color-white-glass;
+        box-shadow:6px 6px 4px 0px $color-black+#{4};
+        font-family:$font;
+        font-size:14px;
+        resize:none;
+        .text &, .memo &{
+          padding:20px;
+        }
+        .file &>._file_list{
+          // @include debug;
+          width:100%;
+          height:100%;
+          overflow-y:auto;
+          >.file_item{
+            // @include debug;
+            width:100%;
+            height:fit-content;
+            padding:10px;
+            background-color:$color-file-station+#{40};
+            box-shadow:4px 4px 4px 0px $color-shadow;
+            @include flex_row;
+            justify-content:space-between;
+            align-items:center;
+            >.name{
+              // @include debug;
+              // width:100%;
+              height:fit-content;
+              font-family:$font;
+              font-size:18px;
+              overflow:hidden;
+              text-overflow:ellipsis;
+              white-space:nowrap;
+            }
+            >.size{
+              // @include debug;
+              width:fit-content;
+              height:fit-content;
+              font-family:$font;
+              font-size:16px;
+              white-space:nowrap;
+            }
+            &:nth-child(even){
+              background-color:$color-white-glass;
+            }
+          }
+        }
+      }
+
+
+      // --[ file center ]
+      .add_files_btn{
+        // @include debug;
+        width:100%;
+        height:35px;
+        background-color:$color-white-plastic;
+        font-family:$font;
+        font-size:20px;
+        box-shadow:6px 6px 4px 0px $color-shadow;
+        @include flex_row;
+        justify-content:center;
+        align-items:center;
+        cursor:pointer;
+        &::before{
+          content:"+";
+          padding-right:10px;
+          font-size:28px;
+        }
+        &::after{
+          content:"add file";
+        }
+      }
+      .files_form{
+        display:none;
+      }
+
+
+      // --[ broadcast center ]
+      ._pickup_list{
+        // @include debug;
+        width:100%;
+        height:100%;
+        >.item{
+          // @include debug;
+          width:100%;
+          height:fit-content;
+          padding:6px 8px;
+          //? 기본 색.
+          background-color:$color-gray+#{70};
+          box-shadow:4px 4px 4px 0px $color-shadow;
+          @include flex_row;
+          justify-content:space-between;
+          align-items:center;
+          cursor:pointer;
+          >._broadcast_id{
+            // @include debug;
+            width:fit-content;
+            border-radius:2px;
+            //? 기본 색.
+            background-color:$color-gray;
+            box-shadow:2px 2px 4px 0px $color-shadow;
+            padding:2px 4px;
+            >.broadcast_id{
+              // @include debug;
+              width:100%;
+              height:fit-content;
+              color:$color-white;
+              font-family:$font;
+              font-size:16px;
+              overflow:hidden;
+              text-overflow:ellipsis;
+              white-space:nowrap;
+              @include flex_row;
+              justify-content:center;
+            }
+          }
+          >._info{
+            // @include debug;
+            // padding-left:0px;
+            >.info{
+              // @include debug;
+              width:fit-content;
+              height:fit-content;
+              color:$color-white;
+              font-family:$font;
+              font-size:18px;
+              white-space:nowrap;
+            }
+          }
+        }
+
+        // -- text item
+        .item.text{
+          background-color:$color-text-station+#{f0};
+          >._broadcast_id{
+            background-color:$color-text-station+#{80};
+            >.broadcast_id{}
+          }
+          >._info{
+            >.info::before{
+              content:"Text";
+            }
+          }
+        }
+        // -- memo item
+        .item.memo{
+          background-color:$color-memo-station+#{f0};
+          >._broadcast_id{
+            background-color:$color-memo-station+#{80};
+            >.broadcast_id{
+              color:$color-gray;
+            }
+          }
+          >._info{
+            >.info::before{
+              content:"Memo";
+              color:$color-gray;
+            }
+          }
+        }
+        // -- file item
+        .item.file{
+          background-color:$color-file-station+#{f0};
+          >._broadcast_id{
+            background-color:$color-file-station+#{80};
+            >.broadcast_id{}
+          }
+          >._info{
+            >.info::before{
+              content:"File";
+            }
+          }
+        }
+      }
+
+
+      .upload_btn::before{
+        // @include debug;
+        content:"upload";
+        width:100%;
+        height:35px;
+        color:$color-text-black;
+        font-family:$font;
+        font-size:24px;
+        //? 기본 버튼 컬러.
+        background-color:$color-gray+#{40};
+        .text &{
+          background-color:$color-text-station+#{40};
+        }
+        .memo &{
+          background-color:$color-memo-station+#{40};
+        }
+        .file &{
+          background-color:$color-file-station+#{40};
+        }
+        .broadcast &{
+          background-color:$color-broadcast-station+#{40};
+        }
+        .storage &{
+          background-color:$color-storage-station+#{40};
+        }
+        box-shadow:6px 6px 4px 0px $color-black+#{4};
+        @include flex_row;
+        justify-content:center;
+        align-items:center;
+        cursor:pointer;
+      }
+    }
+  }
+  ._share_box{
+    // @include debug;
+    width:100%;
+    height:fit-content;
+    ._send, ._share{
+      // @include debug;
+      width:100%;
+      height:inherit;
+      padding:0px 10px 10px 10px;
+      .send, .share{
+        width:100%;
+        height:inherit;
+        padding:8px 28px;
+        background-color:$color-white-glass;
+        >*{
+          // @include debug;
+          width:100%;
+          height:inherit;
+        }
+        >.send_input{
+          padding:4px 0px;
+          border:none;
+          outline:none;
+          background-color:$color-white-plastic;
+          color:$color-text-black;
+          font-family:$font;
+          font-size:18px;
+          text-align:center;
+          box-shadow:6px 6px 4px 0px $color-shadow;
+          @include flex_row;
+          justify-content:center;
+        }
+        >.send_btn{
+          padding:2px 0px;
+          //? 기본 컬러.
+          background-color:$color-gray+#{40};
+          .text &{
+            background-color:$color-text-station+#{40};
+          }
+          .memo &{
+            background-color:$color-memo-station+#{40};
+          }
+          .file &{
+            background-color:$color-file-station+#{40};
+          }
+          .broadcast &{
+            background-color:$color-broadcast-station+#{40};
+          }
+          .storage &{
+            background-color:$color-storage-station+#{40};
+          }
+          color:$color-text-black;
+          font-family:$font;
+          font-size:24px;
+          box-shadow:6px 6px 4px 0px $color-shadow;
+          @include flex_row;
+          justify-content:center;
+        }
+        >.share_txt, >.share_code{
+          // @include debug;
+          padding:2px 0px;
+          color:$color-text-black;
+          font-family:$font;
+          font-size:20px;
+          @include flex_row;
+          justify-content:center;
+        }
+        >.share_txt{
+          padding-bottom:8px;
+        }
+        >.share_code{
+          background-color:$color-white-glass;
+          box-shadow:4px 4px 4px 0px $color-shadow;
+        }
+      }
+    }
+  }
+}
+// --[ TextCenter-desktop ]
+:global(.TILT_ROW){
+  .Center{
+    ._box{
+      min-height:calc( 20px + 20px + 100px + 0px );
+      padding:20px 50px 20px 50px;
+      .box{
+        min-height:calc( 100px + 80px );
+        max-height:calc( 550px + 80px );
+        ._input{
+          min-height:100px;
+          max-height:550px;
+          font-size:20px;
+          .text &,.memo &{}
+        }
+        .add_files_btn{}
+        ._pickup_list{}
+        .upload_btn::before{
+          content:"upload : Enter";
+          height:80px;
+          font-size:28px;
+          :global(.file) &{
+            content:"upload";
+          }
+        }
+      }
+    }
+    ._share_box{
+      ._send, ._share{
+        .send, .share{
+          >*{}
+          >.send_input{}
+          >.send_btn{}
+          >.share_txt, >.share_code{}
+          >.share_code{}
+        }
+      }
+    }
+  }
+}

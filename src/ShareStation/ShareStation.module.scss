@@ -1,0 +1,160 @@
+@use './../utiles' as *;
+@font-face {
+  font-family:'orbitron';
+  font-display:block;
+  src: url(./../media/Orbitron-VariableFont_wght.ttf);
+}
+@font-face {
+  font-family:'orbit';
+  font-display:block;
+  src: url(./../media/Orbit-Regular.ttf);
+}
+
+
+$color-main-theme:#46e3ff;
+$color-main-bold:#23b2ff;
+$color-text-station:#ffb565;
+$color-text-station-glass:#ffb56580;
+$color-memo-station:#ffe57f;
+$color-file-station:#ff6969;
+$color-storage-station:$color-main-bold;
+$color-broadcast-station:#8c89ff;
+$color-black:#000;
+$color-shadow:#0004;
+$color-text-black:#363636;
+$color-gray:#646464;
+$color-white:#fff;
+$color-tune-white:#efffff;
+$color-white-glass:#fff4;
+$color-white-plastic:#fff7;
+$color-red-dot:#f05242;
+
+$svg-logo:url('../media/logo-share_station.svg');
+
+$timer-station-bar:.4s;
+
+// $font:'orbitron','orbitron','default';
+$font:'orbitron', '휴먼엽서체', 'default';
+
+
+// --[ Main ]
+:global(.text),:global(.memo),:global(.file),:global(.broadcast),:global(.storage){
+  width:100%;
+  height:100%;
+}
+.Main{
+  width:100%;
+  height:100%;
+  @include flex_column;
+  ._header{
+    // @include debug;
+    width:100%;
+    height:45px;
+    .header{
+      width:100%;
+      height:100%;
+      position:relative;
+      z-index:1;
+      background-color:$color-main-bold;
+      box-shadow:0px 4px 4px 0px $color-black+#{4};
+      @include flex_row;
+      justify-content:flex-end;
+      align-items:center;
+      .logo{
+        // @include debug;
+        width:fit-content;
+        height:fit-content;
+        padding-right:20px;
+        color:$color-white;
+        font-family:$font;
+        font-size:24px;
+        user-select:none;
+        text-rendering:optimizeSpeed;
+      }
+    }
+  }
+  ._body{
+    // @include debug;
+    width:100%;
+    height:calc( 100% - 45px );
+    .body{
+      width:100%;
+      height:100%;
+      background-color:$color-main-theme;
+      @include flex_column;
+      ._station_list{
+        // @include debug;
+        width:100%;
+        height:40%;
+        .station_list{
+          width:100%;
+          height:100%;
+          overflow-y:auto;
+          @include flex_column;
+          :global(.STATION_BOX){
+            width:100%;
+            height:fit-content;
+            padding:5px 10px;
+            &:first-child{
+              padding-top:10px;
+            }
+            &:last-child{
+              padding-bottom:10px;
+            }
+          }
+        }
+      }
+      ._share_center{
+        // @include debug;
+        width:100%;
+        height:60%;
+      }
+    }
+  }
+}
+// --[ Main-desktop ]
+.Main:global(.TILT_ROW){
+  @include flex_row;
+  ._header{
+    width:80px;
+    height:100%;
+    .header{
+      box-shadow:4px 0px 4px 0px $color-black+#{4};
+      justify-content:center;
+      align-items:flex-start;
+      .logo{
+        font-size:32px;
+        writing-mode:vertical-lr;
+        rotate:180deg;
+        padding:0;
+        padding-bottom:40px;
+      }
+    }
+  }
+  ._body{
+    width:calc( 100% - 80px );
+    height:100%;
+    .body{
+      @include flex_row;
+      ._station_list{
+        width:60%;
+        height:100%;
+        .station_list{
+          :global .STATION_BOX{
+            padding:15px 40px;
+            &:first-child{
+              padding-top:30px;
+            }
+            &:last-child{
+              padding-bottom:30px;
+            }
+          }
+        }
+      }
+      ._share_center{
+        width:40%;
+        height:100%;
+      }
+    }
+  }
+}

@@ -1,0 +1,252 @@
+@use "./../ShareStation.module.scss" as *;
+@use "./../../utiles" as *;
+
+
+$px-station-inner-box-height:160px;
+
+
+// -- 사용 가능한 스태이션 종류.
+.text{}
+.memo{}
+.file{}
+.broadcast{}
+.storage{}
+
+
+
+// --[[ Station ]]
+.Station{
+  // @include debug;
+  width:100%;
+  height:fit-content;
+  cursor:pointer;
+  .station{
+    width:100%;
+    height:fit-content;
+    border-radius:4px;
+    //? 기본 색.
+    background-color:$color-gray;
+    .text+&{
+      background-color:$color-text-station;
+    }
+    .memo+&{
+      background-color:$color-memo-station;
+    }
+    .file+&{
+      background-color:$color-file-station;
+    }
+    .broadcast+&{
+      background-color:$color-broadcast-station;
+    }
+    .storage+&{
+      background-color:$color-storage-station;
+    }
+    @include flex_row;
+    ._left{
+      // @include debug;
+      width:fit-content;
+      min-width:fit-content;
+      height:100%;
+      @include flex_column;
+      >.title{
+        padding:6px 0px 6px 14px;
+        //? 기본 색.
+        color:$color-white;
+        .memo+&{
+          color:$color-gray;
+        }
+        font-family:$font;
+        font-size:20px;
+        white-space:nowrap;
+        user-select:none;
+        &::before{
+          //? 기본 스태이션 이름.
+          content:"Uknown Station";
+        }
+        .text+&::before{
+          content:"Text Station";
+        }
+        .memo+&::before{
+          content:"Memo Station";
+        }
+        .file+&::before{
+          content:"File Station";
+        }
+        .broadcast+&::before{
+          content:"Broadcast Net";
+        }
+        .storage+&::before{
+          content:"Storage Net";
+        }
+      }
+
+
+      // --[ broadcast station ]
+      .broadcast+&{
+        @include flex_column;
+        align-items:flex-end;
+        >.new_notifi{
+          display:none;
+          width:6px;
+          height:6px;
+          position:relative;
+          left:6px;
+          top:4px;
+          margin-top:2px;
+          ///////////////////////// 그림자를 넣을까?
+          // box-shadow:1px 1px 1px 0px $color-shadow;
+          background-color:$color-red-dot;
+          &.active{
+            display:flex;
+          }
+        }
+        >._title{
+          // @include debug;
+          width:fit-content;
+          height:fit-content;
+          padding:0px 0px 6px 14px;
+          >.title{
+            color:$color-tune-white;
+            font-family:$font;
+            font-size:20px;
+            &::before{
+              ////////////////////////////////
+              // content:"Broadcast Net";
+              content:"Pickup Station";
+            }
+          }
+        }
+        >._id{
+          // @include debug;
+          width:auto;
+          height:auto;
+          padding:0px 0px 8px 0px;
+          @include flex_row;
+          justify-content:flex-end;
+          >.id{
+            color:$color-tune-white;
+            font-family:$font;
+            font-size:16px;
+          }
+        }
+      }
+    }
+    // -- 모바일은 보일 필요 없음.
+    >._right{
+      display:none;
+      .broadcast+&{
+        // @include debug;
+        display:flex;
+        width:100%;
+        height:auto;
+        >._input{
+          // @include debug;
+          width:100%;
+          height:fit-content;
+          padding:8px 14px;
+          @include flex_column;
+          align-items:flex-end;
+          >.code_input,>.get_btn{
+            // @include debug;
+            width:100%;
+            max-width:300px;
+            height:30px;
+            color:$color-tune-white;
+            font-family:$font;
+            font-size:16px;
+            text-align:center;
+            @include flex_row;
+            justify-content:center;
+            align-items:center;
+          }
+          >.code_input{
+            border:none;
+            background-color:$color-white-glass;
+            box-shadow:4px 4px 4px 0px $color-shadow;
+            outline:none;
+            &::placeholder{
+              color:$color-white-plastic;
+            }
+          }
+          >.get_btn{
+            background-color:$color-broadcast-station+#{80};
+            box-shadow:4px 4px 4px 0px $color-shadow;
+            user-select:none;
+            cursor:pointer;
+          }
+        }
+      }
+    }
+  }
+}
+
+
+:global(.TILT_ROW){
+  .Station{
+    .station{
+      // -- 공통 패딩.
+      padding:20px;
+      ._left{
+        .title{
+          // -- 추가 패딩.
+          padding:10px 0px 10px 10px;
+          font-size:32px;
+        }
+      }
+      // --[ DESKTOP ]
+      >._right{
+        display:flex;
+        width:100%;
+        height:auto;
+
+        
+        // -- Text Station
+        >*{
+          width:100%;
+          height:auto;
+          padding-left:40px;
+        }
+        >._text_box{
+          // @include debug;
+          @include flex_column;
+          >.text_box{
+            width:100%;
+            height:$px-station-inner-box-height;
+            padding:20px;
+            border:none;
+            outline:none;
+            resize:none;
+            background-color:$color-white-glass;
+            color:$color-text-black;
+            font-family:$font;
+            font-size:20px;
+            // word-break:break-word;
+            overflow-wrap:anywhere;
+            box-shadow:6px 6px 4px 0px $color-black+#{4};
+          }
+        }
+
+        // -- file station
+        >._file_list_box{
+          // @include debug;
+          >.file_list_box{
+            width:100%;
+            height:$px-station-inner-box-height;
+            border:1px dashed $color-gray;
+            background-color:$color-white-glass;
+            color:$color-gray;
+            font-family:$font;
+            font-size:20px;
+            text-align: center;
+            box-shadow:inset 6px 6px 4px 0px $color-shadow;
+            @include flex_column;
+            justify-content:center;
+            &.dragenter{
+              background-color:$color-white-plastic;
+            }
+          }
+        }
+      }
+    }
+  }
+}
