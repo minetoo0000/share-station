@@ -4,7 +4,7 @@ import { useMediaQuery } from "react-responsive";
 import style from "./ShareStation.module.scss";
 import { and, calcTime, ClearScroll, DB, ex } from "../utiles";
 import LOGO from "./../media/logo-share_station.svg";
-import { Code, DataInfo, JsonDataUploads, JsonGetBroadcastID, JsonGetDataInfo, dataobjType } from "./../classRequest";
+import { Code, DataInfo, JsonDataUploads, JsonGetBroadcastID, JsonGetDataInfo, JsonGetTextData, dataobjType } from "./../classRequest";
 // --[ Station ]
 import TextStation from "./Text/Text";
 import FileStation from "./File/File";
@@ -187,6 +187,15 @@ class GetDataInfo extends ReqResult{
     this.data_info_list = [...data_info_list];
   }
 }
+class GetText extends ReqResult{
+  text:string = "";
+  constructor( success?:boolean, text?:string )
+  {
+    super(success);
+    if ( text == undefined || success == false ) return;
+    this.text = text;
+  }
+}
 async function urlTextUpload( text:string ):Promise<DataUpload>
 {
   // -- init
@@ -245,7 +254,7 @@ async function urlTextUpload( text:string ):Promise<DataUpload>
   // -- return
   return( result );
 }
-async function urlDataUpload( memo:string ):Promise<DataUpload>
+async function XXurlDataUpload( memo:string ):Promise<DataUpload>
 {
   // -- init
   let result = new DataUpload();
@@ -498,6 +507,36 @@ async function urlGetBroadcastID():Promise<JsonGetBroadcastID>
   // -- return
   return( result );
 }
+async function urlGetTextData( data_id:number ):Promise<GetText>
+{
+  // -- init
+  let result = new GetText();
+  let res_result = new JsonGetTextData();
+  let state:0|1|-1 = -1;
+  // -- function
+  async function resCheck( data:Response ):Promise<0|1>
+  {
+    res_result = await data.json();
+    if (ex(
+      res_result?.code == Code.success,
+      typeof res_result?.text == 'string',
+    )) return( 0 );
+    return( 1 );
+  }
+  // -- logic
+  do{
+    state = await fetch(base_url+"/get-data-text/"+String(data_id), getmethod()).then(resCheck).catch(reqError);
+    if ( state != 1 )
+    {
+      result = new GetText(false);
+      break;
+    }
+
+    result = new GetText(true, res_result.text);
+  }while(0);
+  // -- return
+  return( result );
+}
 
 
 // --[[ 중앙 제어 관제탑 ]]
@@ -550,6 +589,14 @@ function _MainControlTower()
   function modeFile() { setMode(CenterMode.file) }
   function modeBroad() { setMode(CenterMode.broadcast) }
   function modeStorage() { setMode(CenterMode.storage) }
+  // --[ 픽업 항목 ]
+  //? 텍스트와 파일 모두 본 함수 하나로 처리.
+  //? 첫 번째 항목의 타입을 기준으로 타입 구별.
+  function handlePickupItemClick( pickup_info:PickupInfo )
+  {
+    // -- 데이터 가져오기.
+    handleClickGet(pickup_info.id_1, pickup_info.id_2);
+  }
   // --[ foreground ]
   async function updatePickupList()
   {
@@ -559,8 +606,6 @@ function _MainControlTower()
     // -- logic
     do{
       qr_result = await urlGetPickupList();
-      ///////////////////////////////
-      console.log(`쿼리 요청 결과 :`,qr_result);
       setStatePickupList(qr_result.share_id_list);
     }while(0);
     // -- return
@@ -588,8 +633,6 @@ function _MainControlTower()
       }
     }while(0);
   }
-
-
   // --[ text ]
   function handleChangeText( text:string )
   {
@@ -669,8 +712,6 @@ function _MainControlTower()
   // --[ send ]
   async function handleSend( broadcast_id_1:number, broadcast_id_2:number, share_id_1:number, share_id_2:number )
   {
-    //////////////////////
-    console.log(`handleSend - 데이터 전송 요청......`);
     setStateSend(new BroadcastState(feedback.wait));
     const result = await urlSendData({
       broadcast_id_1,
@@ -678,8 +719,6 @@ function _MainControlTower()
       share_id_1,
       share_id_2,
     });
-    //////////////////////////////
-    console.log(`result :`, result);
     if ( result.success == true )
     {
       setStateSend(new BroadcastState(feedback.success, broadcast_id_1, broadcast_id_2));
@@ -692,12 +731,10 @@ function _MainControlTower()
   // --[ get data ]
   async function handleClickGet( code_1:number, code_2:number )
   {
-    console.log(`get click`, code_1, code_2);
     setStateGet(new StateGet(feedback.wait));
     const req_result = await urlGetDataInfo(code_1, code_2);
     if ( req_result.success != true )
     {
-      console.log(`fail...`, req_result);
       setStateGet(new StateGet(feedback.fail));
     }
     else{
@@ -705,6 +742,40 @@ function _MainControlTower()
       setStateGet(new StateGet(feedback.success, req_result.data_info_list));
     }
   }
+  // --[ get 데이터 가져오기 ]
+  function settingStateGet()
+  {
+    // -- init
+    let type:dataobjType = dataobjType.unknown;
+    // -- function
+    function callbackurl( qr_result:GetText )
+    {
+      if ( qr_result.success == false ) return;
+      setText(qr_result.text);
+      modeText();
+    }
+    // -- logic
+    do{
+      if ( state_get.state != feedback.success ) return;
+
+      type = state_get.data_info_list[0].data_type;
+      if ( type == dataobjType.text )
+      {
+        urlGetTextData(state_get.data_info_list[0].data_id).then(callbackurl).catch(reqError);
+      }
+      else if ( type == dataobjType.file )
+      {
+        ////////////////////// 데이터 정보 리스트 가져온 후 파일 스태이션에 보이기. 항목 클릭 시 다운로드!
+        // setFiles();
+      }
+      else
+      {
+        //////////////////////////
+      }
+    }while(0);
+    // -- return
+  }
+  useEffect(settingStateGet, [state_get]);
 
   // -- display
   return(
@@ -756,6 +827,7 @@ function _MainControlTower()
             <ShareCenter
               //! 더이상 사용되지 않음.
               mode={mode}
+              handlePickupItemClick={handlePickupItemClick}
 
               set_send_state={state_send}
               handleSend={handleSend}
@@ -770,7 +842,6 @@ function _MainControlTower()
               handleUploadBtn={handleUploadFiles}
 
               set_pickup_list={state_pickup_list}
-              // set_broad_list={}
             />
           </div>
         </div>

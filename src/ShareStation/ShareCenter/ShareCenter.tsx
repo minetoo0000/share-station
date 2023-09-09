@@ -363,34 +363,36 @@ function _FileShareCenter( props:FileShareCenterProps )
 
 
 // --[ Broadcast center ]
-// class PickupInfo{
-//   constructor(
-//     // public type:dataobjType = dataobjType.unknown,
-//     public type:CenterMode = CenterMode.text,
-//     public id_1:number = 0,
-//     public id_2:number = 0,
-//   ){}
-// }
 interface BroadcastCenterProps{
   set_pickup_list:PickupInfo[];
+  handlePickupItemClick:( pickup_info:PickupInfo )=>any;
 }
-function _BroadcastCenter( props:BroadcastCenterProps )
+function _BroadcastCenter( root_props:BroadcastCenterProps )
 {
   // --[[ init ]]
 
   
-  // --[[ function ]]
-  // --[ pickup item ]
+  // --[[ component ]]
   function PickupItem( props:{pickup_info:PickupInfo} )
   {
     const type = props.pickup_info.type;
-    const id_1 = props.pickup_info.id_1;
-    const id_2 = props.pickup_info.id_2;
+    const id_1 = props.pickup_info.id_1.toString().padStart(2, '0');
+    const id_2 = props.pickup_info.id_2.toString().padStart(2, '0');
+
+    // --[[ function ]]
+    // --[ click ]
+    function onClickPickupItem( e:MouseEvent )
+    {
+      root_props.handlePickupItemClick(props.pickup_info);
+    }
     return(
-      <div className={and(
-        style.item,
-        Centermap(dataobjMap(type)as CenterMode)
-      )}>
+      <div
+        className={and(
+          style.item,
+          Centermap(dataobjMap(type)as CenterMode)
+        )}
+        onClick={onClickPickupItem}
+      >
         <div className={style._info}>
           <div className={style.info}/>
         </div>
@@ -409,7 +411,7 @@ function _BroadcastCenter( props:BroadcastCenterProps )
       );
     }
     return(
-      props.set_pickup_list.map(cb)
+      root_props.set_pickup_list.map(cb)
     );
   }
 
@@ -422,10 +424,6 @@ function _BroadcastCenter( props:BroadcastCenterProps )
             <div className={style._pickup_list}>
 
               {wrapPickupList()}
-
-              {/* <PickupItem pickup_info={new PickupInfo(CenterMode.text, 12, 22)}/>
-              <PickupItem pickup_info={new PickupInfo(CenterMode.file, 23, 45)}/>
-              <PickupItem pickup_info={new PickupInfo(CenterMode.text, 23, 45)}/> */}
 
             </div>
           </div>
@@ -484,6 +482,7 @@ function DisplayCenter( props:{props:ShareCenterProps} )
     case CenterMode.broadcast:return(
       <_BroadcastCenter
         set_pickup_list={props.props.set_pickup_list}
+        handlePickupItemClick={props.props.handlePickupItemClick}
       />
     );
   }
@@ -493,6 +492,7 @@ function DisplayCenter( props:{props:ShareCenterProps} )
 
 interface ShareCenterProps{
   mode:CenterMode;
+  handlePickupItemClick:( pickup_info:PickupInfo )=>any;
 
   set_send_state:BroadcastState;
   handleSend:(

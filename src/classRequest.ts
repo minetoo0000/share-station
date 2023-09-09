@@ -144,6 +144,15 @@ class JsonGetBroadcastID extends ReqResult{
     this.broadcast_id_2 = broad_id.id_2;
   }
 }
+class JsonGetTextData extends ReqResult{
+  text:string = "";
+  constructor( code?:Code, text?:string )
+  {
+    super(code);
+    if ( text == undefined || code != Code.success ) return;
+    this.text = text;
+  }
+}
 
 
 export{
@@ -154,4 +163,5 @@ export{
   JsonDataUploads,
   JsonGetDataInfo,
   JsonGetBroadcastID,
+  JsonGetTextData,
 }
