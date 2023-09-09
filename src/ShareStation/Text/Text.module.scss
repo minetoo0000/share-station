@@ -104,14 +104,12 @@ $px-station-inner-box-height:160px;
           // @include debug;
           width:fit-content;
           height:fit-content;
-          padding:0px 0px 6px 14px;
           >.title{
+            padding:0px 0px 6px 14px;
             color:$color-tune-white;
             font-family:$font;
             font-size:20px;
             &::before{
-              ////////////////////////////////
-              // content:"Broadcast Net";
               content:"Pickup Station";
             }
           }
@@ -187,18 +185,36 @@ $px-station-inner-box-height:160px;
       // -- 공통 패딩.
       padding:20px;
       ._left{
+        >.new_notifi{
+          width:12px;
+          height:12px;
+        }
         .title{
-          // -- 추가 패딩.
+          // @include debug;
           padding:10px 0px 10px 10px;
-          font-size:32px;
+          font-size:32px !important;
+        }
+        >._id{
+          >.id{
+            font-size:20px;
+          }
         }
       }
-      // --[ DESKTOP ]
       >._right{
         display:flex;
         width:100%;
         height:auto;
 
+
+        // -- Pickup Station
+        ._input{
+          .get_btn,.code_input{
+            max-width:500px;
+            height:50px;
+            font-size:24px;
+          }
+        }
+        
         
         // -- Text Station
         >*{

@@ -75,6 +75,14 @@ class PickupInfo{
     public id_2:number = 0,
   ){}
 }
+class FileInfo{
+  constructor(
+    public is_shared_file:boolean,
+    public shared_file_name:string,
+    public shared_file_id:number|null,
+    public file:File|null,
+  ){}
+}
 
 
 // --[[ function ]]
@@ -550,7 +558,8 @@ function _MainControlTower()
   const state_init = useRef<boolean>(false);
   const [ mode, setMode ] = useState<CenterMode>(CenterMode.text);
   const [ text, setText ] = useState<string>("");
-  const [ files, setFiles ] = useState<File[]>([]);
+  // const [ files, setFiles ] = useState<File[]>([]);
+  const [ files, setFiles ] = useState<FileInfo[]>([]);
   const [ share_id, setShareID ] = useState<ShareID>({
     state:StateShareID.dim,
     share_id_1:0,
@@ -672,7 +681,13 @@ function _MainControlTower()
   // --[ files ]
   const addFiles = useCallback(
     ( get_files:File[] )=>{
-      return( files.concat(get_files) );
+      // return( files.concat(get_files) );
+      const file_info_list:FileInfo[] = [];
+      for ( const file of get_files )
+      {
+        file_info_list.push(new FileInfo(false, file.name, null, file));
+      }
+      return( files.concat(file_info_list) );
     },
     [files]
   );
@@ -688,7 +703,13 @@ function _MainControlTower()
       share_id_2:0,
       data_info_list:[],
     });
-    const result = await urlFilesUpload(files);
+    const file_list:File[] = [];
+    for ( const file of files )
+    {
+      if ( file.file == null ) continue;
+      file_list.push(file.file);
+    }
+    const result = await urlFilesUpload(file_list);
     if ( result.success == true )
     {
       setShareID({
@@ -765,8 +786,13 @@ function _MainControlTower()
       }
       else if ( type == dataobjType.file )
       {
-        ////////////////////// 데이터 정보 리스트 가져온 후 파일 스태이션에 보이기. 항목 클릭 시 다운로드!
-        // setFiles();
+        const file_info_list:FileInfo[] = [];
+        for ( const { file_name, data_id } of state_get.data_info_list )
+        {
+          file_info_list.push(new FileInfo(true, file_name, data_id, null));
+        }
+        setFiles(file_info_list);
+        modeFile();
       }
       else
       {
@@ -858,12 +884,16 @@ function MainControlTower()
 }
 
 export{
+  base_url,
+  getmethod,
+  reqError,
   MainControlTower,
   feedback,
   StateShareID,
   StateBroadcast,
   BroadcastState,
   PickupInfo,
+  FileInfo,
 };
 export type {
   ShareID,

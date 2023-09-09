@@ -2,7 +2,7 @@ import { ChangeEvent, TouchEvent, KeyboardEvent, MouseEvent, useEffect, useState
 import { dataobjMap, dataobjType } from "../../classRequest";
 import { DB, ID, and, bytesToSize, ex, isNAN } from "../../utiles";
 import style from "./ShareCenter.module.scss";
-import { BroadcastState, PickupInfo, ShareID, StateShareID, feedback } from "../ShareStation";
+import { BroadcastState, FileInfo, PickupInfo, ShareID, StateShareID, base_url, feedback, getmethod, reqError } from "../ShareStation";
 
 // --[ init ]
 function feedShareID( share_id:ShareID ):string
@@ -206,7 +206,7 @@ function _TextShareCenter( props:TextShareCenterProps )
 
 // --[ file center ]
 interface FileShareCenterProps{
-  set_files:File[];
+  set_files:FileInfo[];
   set_share_id:ShareID;
   handleAddFiles:( files:File[] )=>any;
   handleUploadBtn:()=>any;
@@ -222,7 +222,7 @@ interface FileShareCenterProps{
 function _FileShareCenter( props:FileShareCenterProps )
 {
   // --[[ init ]]
-  const [ files, setFiles ] = useState<File[]>(props.set_files);
+  // const [ files, setFiles ] = useState<File[]>(props.set_files);
   const [ files_form, setForm ] = useState<FormData>(new FormData());
   const [ broad_id, setBroadID ] = useState<string>("");
   const [ share_id, setShareID ] = useState<ShareID>(props.set_share_id);
@@ -244,6 +244,13 @@ function _FileShareCenter( props:FileShareCenterProps )
   function onClickUpload( e:MouseEvent )
   {
     props.handleUploadBtn();
+  }
+  // --[ download btn ]
+  function handleDownload( file_id:number )
+  {
+    // fetch(base_url+"/get-data-file/"+String(file_id), getmethod()).then().catch(reqError)
+    // .then().catch(reqError);
+    window.open(base_url+"/get-data-file/"+String(file_id));
   }
   // --[ broadcast id ]
   function onChangeBroadID( e:ChangeEvent<HTMLInputElement> )
@@ -284,27 +291,78 @@ function _FileShareCenter( props:FileShareCenterProps )
     setShareID(props.set_share_id);
   }
   useEffect(settingShareID, [props.set_share_id]);
-  function settingFiles()
-  {
-    setFiles(props.set_files);
-  }
-  useEffect(settingFiles, [props.set_files]);
+  // function settingFiles()
+  // {
+  //   setFiles(props.set_files);
+  // }
+  // useEffect(settingFiles, [props.set_files]);
   // --[ file list display ]
-  function FileItem( props:{file_name:string,file_size:number} )
+  // function FileItem( props:{file_name:string,file_size:number} )
+  function FileItem( props:{ file_info:FileInfo } )
   {
+    if ( props.file_info.file == null )
+      return(
+        <></>
+      );
+
+
+    const file_name:string = props.file_info.file.name;
+    const file_size:string = bytesToSize(props.file_info.file.size);
+    
+    
     return(
       <div className={style.file_item}>
-        <div className={style.name}>{props.file_name}</div>
-        <div className={style.size}>{bytesToSize(props.file_size)}</div>
+        <div className={style.name}>{file_name}</div>
+        <div className={style.size}>{file_size}</div>
+      </div>
+    );
+
+
+    // return(
+    //   <div className={style.file_item}>
+    //     <div className={style.name}>{props.file_name}</div>
+    //     <div className={style.size}>{bytesToSize(props.file_size)}</div>
+    //   </div>
+    // );
+  }
+  interface SharedFileItemProps{
+    file_info:FileInfo;
+  };
+  function SharedFileItem( props:SharedFileItemProps )
+  {
+    if ( props.file_info.shared_file_id == null )
+      return(
+        <></>
+      );
+    
+    const file_name:string = props.file_info.shared_file_name;
+
+    function onClickDownload( e:MouseEvent )
+    {
+      if ( props.file_info.shared_file_id == null ) return;
+      handleDownload(props.file_info.shared_file_id);
+    }
+    
+    return(
+      <div className={style.file_item} onClick={onClickDownload}>
+        <div className={style.name}>{file_name}</div>
+        <div className={style.download_btn}></div>
       </div>
     );
   }
   function FileList()
   {
     return(
-      <div className={style._file_list}>{files.map(( file )=>{
-        return( <FileItem key={ID()} file_name={file.name} file_size={file.size}/> );
-      })}</div>
+      <div className={style._file_list}>
+        {
+          props.set_files.map(( file_info )=>{
+            if ( file_info.is_shared_file == true )
+              return( <SharedFileItem key={ID()} file_info={file_info}/> );
+            else
+              return( <FileItem key={ID()} file_info={file_info}/> );
+          })
+        }
+      </div>
     );
   }
 
@@ -507,7 +565,7 @@ interface ShareCenterProps{
   handleChangeText:( text:string )=>any;
   handleEnterText:( text:string )=>any;
 
-  set_files:File[];
+  set_files:FileInfo[];
   handleAddFiles:( files:File[] )=>any;
   handleUploadBtn:()=>any;
 

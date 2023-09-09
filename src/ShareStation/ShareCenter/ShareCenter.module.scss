@@ -1,6 +1,8 @@
 @use './../../utiles' as *;
 @use './../ShareStation.module.scss' as *;
 
+$svg-download-btn:url(./../../media/download_btn.svg);
+
 
 .text,.memo,.file,.broadcast,.storage{
   width:100%;
@@ -141,6 +143,7 @@
               // @include debug;
               // width:100%;
               height:fit-content;
+              color:$color-text-black;
               font-family:$font;
               font-size:18px;
               overflow:hidden;
@@ -151,9 +154,15 @@
               // @include debug;
               width:fit-content;
               height:fit-content;
+              color:$color-text-black;
               font-family:$font;
               font-size:16px;
               white-space:nowrap;
+            }
+            >.download_btn{
+              // @include debug;
+              height:24px;
+              content:$svg-download-btn;
             }
             &:nth-child(even){
               background-color:$color-white-glass;
@@ -169,6 +178,7 @@
         width:100%;
         height:35px;
         background-color:$color-white-plastic;
+        color:$color-text-black;
         font-family:$font;
         font-size:20px;
         box-shadow:6px 6px 4px 0px $color-shadow;
@@ -180,9 +190,20 @@
           content:"+";
           padding-right:10px;
           font-size:28px;
+          
+          
+          :global(.TILT_ROW) &{
+            font-size:32px;
+          }
         }
         &::after{
           content:"add file";
+        }
+        
+
+        :global(.TILT_ROW) &{
+          height:60px;
+          font-size:24px;
         }
       }
       .files_form{
@@ -340,6 +361,13 @@
           // @include debug;
           width:100%;
           height:inherit;
+          @include flex_row;
+          align-items:center;
+
+
+          :global(.TILT_ROW) &{
+            height:50px;
+          }
         }
         >.send_input{
           padding:4px 0px;
@@ -353,6 +381,11 @@
           box-shadow:6px 6px 4px 0px $color-shadow;
           @include flex_row;
           justify-content:center;
+
+
+          :global(.TILT_ROW) &{
+            font-size:24px;
+          }
         }
         >.send_btn{
           padding:2px 0px;
@@ -379,6 +412,11 @@
           box-shadow:6px 6px 4px 0px $color-shadow;
           @include flex_row;
           justify-content:center;
+
+
+          :global(.TILT_ROW) &{
+            font-size:26px;
+          }
         }
         >.share_txt, >.share_code{
           // @include debug;
@@ -388,6 +426,11 @@
           font-size:20px;
           @include flex_row;
           justify-content:center;
+
+
+          :global(.TILT_ROW) &{
+            font-size:24px;
+          }
         }
         >.share_txt{
           padding-bottom:8px;
@@ -419,7 +462,7 @@
         ._pickup_list{}
         .upload_btn::before{
           content:"upload : Enter";
-          height:80px;
+          height:60px;
           font-size:28px;
           :global(.file) &{
             content:"upload";

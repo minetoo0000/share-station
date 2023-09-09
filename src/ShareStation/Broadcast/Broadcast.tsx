@@ -60,8 +60,7 @@ function _BroadcastStation( props:BroadcastStationProps )
       case feedback.yet:return( "get" );
       case feedback.wait:return( "wait..." );
       case feedback.success:return( "complate" );
-      /////////////////////////// 괭장히 개발자 중심 주의인 사람이 쓰는 문구. 사용자 입장에서 적절한 문장을 사용하지 않음.
-      case feedback.fail:return( "send fail" );
+      case feedback.fail:return( "get fail" );
     }
   }
   // -- get input
