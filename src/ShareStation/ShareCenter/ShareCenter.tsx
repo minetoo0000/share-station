@@ -210,6 +210,7 @@ interface FileShareCenterProps{
   set_share_id:ShareID;
   handleAddFiles:( files:File[] )=>any;
   handleUploadBtn:()=>any;
+  handleFileListLocalFilter:()=>any;
 
   set_broad_state:BroadcastState;
   handleSend:(
@@ -234,6 +235,8 @@ function _FileShareCenter( props:FileShareCenterProps )
   function onClickAddFiles( e:MouseEvent )
   {
     form.current?.click();
+    //? 만약 공유된 파일을 가져온 상태인 경우 지우기 위해 호출.
+    props.handleFileListLocalFilter();
   }
   function onChangeFilesForm( e:ChangeEvent )
   {
@@ -532,6 +535,7 @@ function DisplayCenter( props:{props:ShareCenterProps} )
         set_files={props.props.set_files}
         handleUploadBtn={props.props.handleUploadBtn}
         handleAddFiles={props.props.handleAddFiles}
+        handleFileListLocalFilter={props.props.handleFileListLocalFilter}
 
         set_broad_state={props.props.set_send_state}
         handleSend={props.props.handleSend}
@@ -568,6 +572,7 @@ interface ShareCenterProps{
   set_files:FileInfo[];
   handleAddFiles:( files:File[] )=>any;
   handleUploadBtn:()=>any;
+  handleFileListLocalFilter:()=>any;
 
   set_pickup_list:PickupInfo[];
 }

@@ -14,10 +14,10 @@ import BroadcastStation from "./Broadcast/Broadcast";
 
 // --[[ init ]]
 DB.init();
-// const base_url = "http://192.168.1.12:2520";
+const base_url = "http://192.168.1.12:2520";
 // const base_url = "http://10.246.98.194:2520";
 // const base_url = "http://10.246.97.96:2520";
-const base_url = "http://localhost:2520";
+// const base_url = "http://localhost:2520";
 
 
 // --[[ class ]]
@@ -558,7 +558,6 @@ function _MainControlTower()
   const state_init = useRef<boolean>(false);
   const [ mode, setMode ] = useState<CenterMode>(CenterMode.text);
   const [ text, setText ] = useState<string>("");
-  // const [ files, setFiles ] = useState<File[]>([]);
   const [ files, setFiles ] = useState<FileInfo[]>([]);
   const [ share_id, setShareID ] = useState<ShareID>({
     state:StateShareID.dim,
@@ -590,7 +589,7 @@ function _MainControlTower()
     setInterval(updatePickupList, calcTime(0,0,0,2));
     // -- 클라이언트 아이디 갱신.
     updateID();
-    setInterval(updateID, calcTime(0,0,10,0));
+    setInterval(updateID, calcTime(0,0,0,12));
   }
   useEffect(init, []);
   function modeText() { setMode(CenterMode.text) }
@@ -730,6 +729,17 @@ function _MainControlTower()
       });
     }
   }
+  //? 컴퓨터의 파일만 보이도록 파일 리스트 필터링.
+  function handleFileListLocalFilter()
+  {
+    const filtered = files.filter(( v )=>{
+      if ( v.is_shared_file )
+      return;
+      else
+      return( v );
+    });
+    setFiles(filtered);
+  }
   // --[ send ]
   async function handleSend( broadcast_id_1:number, broadcast_id_2:number, share_id_1:number, share_id_2:number )
   {
@@ -866,6 +876,7 @@ function _MainControlTower()
               set_files={files}
               handleAddFiles={handleAddFiles}
               handleUploadBtn={handleUploadFiles}
+              handleFileListLocalFilter={handleFileListLocalFilter}
 
               set_pickup_list={state_pickup_list}
             />

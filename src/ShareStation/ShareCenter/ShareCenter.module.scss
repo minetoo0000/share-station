@@ -163,6 +163,7 @@ $svg-download-btn:url(./../../media/download_btn.svg);
               // @include debug;
               height:24px;
               content:$svg-download-btn;
+              cursor:pointer;
             }
             &:nth-child(even){
               background-color:$color-white-glass;
@@ -228,6 +229,11 @@ $svg-download-btn:url(./../../media/download_btn.svg);
           justify-content:space-between;
           align-items:center;
           cursor:pointer;
+
+          
+          :global(.TILT_ROW) &{
+            padding:14px 22px;
+          }
           >._broadcast_id{
             // @include debug;
             width:fit-content;
@@ -248,6 +254,11 @@ $svg-download-btn:url(./../../media/download_btn.svg);
               white-space:nowrap;
               @include flex_row;
               justify-content:center;
+
+
+              :global(.TILT_ROW) &{
+                font-size:24px;
+              }
             }
           }
           >._info{
@@ -261,6 +272,11 @@ $svg-download-btn:url(./../../media/download_btn.svg);
               font-family:$font;
               font-size:18px;
               white-space:nowrap;
+
+
+              :global(.TILT_ROW) &{
+                font-size:28px;
+              }
             }
           }
         }
