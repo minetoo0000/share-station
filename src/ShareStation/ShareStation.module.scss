@@ -1,14 +1,15 @@
 @use './../utiles' as *;
-@font-face {
-  font-family:'orbitron';
-  font-display:block;
-  src: url(./../media/Orbitron-VariableFont_wght.ttf);
-}
-@font-face {
-  font-family:'orbit';
-  font-display:block;
-  src: url(./../media/Orbit-Regular.ttf);
-}
+
+// @font-face {
+//   font-family:'orbitron';
+//   font-display:block;
+//   src: url(./../media/Orbitron-VariableFont_wght.ttf);
+// }
+// @font-face {
+//   font-family:'orbit';
+//   font-display:block;
+//   src: url(./../media/Orbit-Regular.ttf);
+// }
 
 
 $color-main-theme:#46e3ff;
@@ -34,7 +35,8 @@ $svg-logo:url('../media/logo-share_station.svg');
 $timer-station-bar:.4s;
 
 // $font:'orbitron','orbitron','default';
-$font:'orbitron', '휴먼엽서체', 'default';
+// $font:'orbitron', '휴먼엽서체', 'default';
+$font:'orbitron', '휴먼엽서체';
 
 
 // --[ Main ]
