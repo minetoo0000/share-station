@@ -85,14 +85,15 @@ $px-station-inner-box-height:160px;
       .broadcast+&{
         @include flex_column;
         align-items:flex-end;
+        position:relative;
         >.new_notifi{
           display:none;
           width:6px;
           height:6px;
-          position:relative;
-          left:6px;
-          top:4px;
-          margin-top:2px;
+          position:absolute;
+          right:-6px;
+          // top:6px;
+          // margin-top:2px;
           ///////////////////////// 그림자를 넣을까?
           // box-shadow:1px 1px 1px 0px $color-shadow;
           background-color:$color-red-dot;
@@ -105,7 +106,7 @@ $px-station-inner-box-height:160px;
           width:fit-content;
           height:fit-content;
           >.title{
-            padding:0px 0px 6px 14px;
+            padding:6px 0px 6px 14px;
             color:$color-tune-white;
             font-family:$font;
             font-size:20px;

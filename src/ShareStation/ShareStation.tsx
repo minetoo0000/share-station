@@ -14,10 +14,11 @@ import BroadcastStation from "./Broadcast/Broadcast";
 
 // --[[ init ]]
 DB.init();
-const base_url = "http://192.168.1.12:2520";
+// const base_url = "http://192.168.1.12:2520";
 // const base_url = "http://10.246.98.194:2520";
 // const base_url = "http://10.246.97.96:2520";
 // const base_url = "http://localhost:2520";
+const base_url = "http://10.246.97.128:2520";
 
 
 // --[[ class ]]
@@ -573,6 +574,7 @@ function _MainControlTower()
   const [ state_get, setStateGet ] = useState<StateGet>(new StateGet());
   const [ state_broadcast, setStateBroadcast ] = useState<StateBroadcast>(new StateBroadcast());
   const [ state_pickup_list, setStatePickupList ] = useState<PickupInfo[]>([]);
+  const [ state_new_pickup, setStateNewPickup ] = useState<boolean>(false);
 
 
   // --[[ function ]]
@@ -615,6 +617,10 @@ function _MainControlTower()
     do{
       qr_result = await urlGetPickupList();
       setStatePickupList(qr_result.share_id_list);
+
+      // -- 픽업 리스트 알림 상태 설정.
+      if ( qr_result.share_id_list.length >= 1 ) setStateNewPickup(true);
+      else setStateNewPickup(false);
     }while(0);
     // -- return
     return( undefined );
@@ -850,7 +856,7 @@ function _MainControlTower()
               <BroadcastStation
                 handleClick={modeBroad} 
 
-                set_new={true}
+                set_new={state_new_pickup}
                 set_get_state={state_get.state}
                 set_state_broadcast={state_broadcast}
 
